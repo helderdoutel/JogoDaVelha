@@ -22,38 +22,46 @@ class Tabuleiro:
         """."""
         return self._tabuleiro
 
-    def vencedor(self):
+    def set_tabuleiro(self, tabuleiro):
+        """."""
+        self._tabuleiro = tabuleiro
+
+    def vencedor(self, tabuleiro=None):
         """Retorna jogador vencedor do jogo. linha coluna."""
         vencedor = 0
+
+        if not tabuleiro:
+            tabuleiro = self._tabuleiro
+
         # coluna
         for x in range(3):
             temp = []
             for y in range(3):
-                if self._tabuleiro[x][y] not in temp:
-                    temp.append(self._tabuleiro[x][y])
+                if tabuleiro[x][y] not in temp:
+                    temp.append(tabuleiro[x][y])
             if len(temp) == 1:
                 vencedor = temp[0]
         # linha
         for x in range(3):
             temp = []
             for y in range(3):
-                if self._tabuleiro[y][x] not in temp:
-                    temp.append(self._tabuleiro[y][x])
+                if tabuleiro[y][x] not in temp:
+                    temp.append(tabuleiro[y][x])
             if len(temp) == 1:
                 vencedor = temp[0]
         # diagonal 1
         temp = []
         for x in range(3):
-            if self._tabuleiro[x][x] not in temp:
-                temp.append(self._tabuleiro[x][x])
+            if tabuleiro[x][x] not in temp:
+                temp.append(tabuleiro[x][x])
         if len(temp) == 1:
             vencedor = temp[0]
 
         # diagonal 2
         temp = []
         for x in range(3):
-            if self._tabuleiro[x][(x - 2) * (-1)] not in temp:
-                temp.append(self._tabuleiro[x][(x - 2) * (-1)])
+            if tabuleiro[x][(x - 2) * (-1)] not in temp:
+                temp.append(tabuleiro[x][(x - 2) * (-1)])
         if len(temp) == 1:
             vencedor = temp[0]
         return vencedor
@@ -68,8 +76,23 @@ class Tabuleiro:
 
     def jogar(self, jogador, x, y):
         """."""
-        self._tabuleiro[x][y] = jogador
-        return True
+        if self._tabuleiro[x][y] not in (1, 2):
+            self._tabuleiro[x][y] = jogador
+            return True
+        print("Posição invalida!")
+        return False
+
+
+class Computador(Tabuleiro):
+    """."""
+
+    def __init__(self, jogador=None):
+        """."""
+        self._jogador = jogador
+
+    def minimax(self, tabuleiro, depth, ismax):
+        """."""
+        return
 
 
 def clear():
@@ -87,7 +110,10 @@ while not t.vencedor():
     print("Vez do jogador %d" % jogador)
     t.mostrar_tabuleiro()
     temp = input("Jogar em qual posição(xy)? ")
-    t.jogar(jogador, int(temp[0]) - 1, int(temp[1]) - 1)
+    while not t.jogar(jogador, int(temp[0]) - 1, int(temp[1]) - 1):
+        clear()
+        t.mostrar_tabuleiro()
+        temp = input("Jogar em qual posição(xy)? ")
     clear()
     jogador = (jogador % 2) + 1
 print("Jogador %d ganhou" % t.vencedor())
