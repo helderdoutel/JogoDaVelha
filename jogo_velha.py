@@ -1,4 +1,5 @@
-# import random
+import random
+from os import system, name
 
 
 class Tabuleiro:
@@ -57,5 +58,37 @@ class Tabuleiro:
             vencedor = temp[0]
         return vencedor
 
+    def mostrar_tabuleiro(self):
+        """."""
+        for x in range(3):
+            print(" %s | %s | %s" % (
+                self._tabuleiro[x][0],
+                self._tabuleiro[x][1],
+                self._tabuleiro[x][2]))
+
+    def jogar(self, jogador, x, y):
+        """."""
+        self._tabuleiro[x][y] = jogador
+        return True
+
+
+def clear():
+    """."""
+    if name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')
+
+clear()
 t = Tabuleiro(1, 2)
-print(t.get_tabuleiro())
+jogador = random.randint(1, 2)
+print("Jogador %s começa" % str(jogador))
+while not t.vencedor():
+    print("Vez do jogador %d" % jogador)
+    t.mostrar_tabuleiro()
+    temp = input("Jogar em qual posição(xy)? ")
+    t.jogar(jogador, int(temp[0]) - 1, int(temp[1]) - 1)
+    clear()
+    jogador = (jogador % 2) + 1
+print("Jogador %d ganhou" % t.vencedor())
+t.mostrar_tabuleiro()
