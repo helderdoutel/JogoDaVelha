@@ -1,5 +1,6 @@
 import random
 from os import system, name
+from copy import deepcopy
 
 
 class Tabuleiro:
@@ -90,9 +91,83 @@ class Computador(Tabuleiro):
         """."""
         self._jogador = jogador
 
-    def minimax(self, tabuleiro, depth, ismax):
+    def jogar_simulacao(self, jogador, x, y, tabuleiro):
         """."""
-        return
+        temp = deepcopy(tabuleiro)
+        if temp[x][y] not in (1, 2):
+            temp[x][y] = jogador
+            return temp
+        return temp
+
+    def processar(self, tabuleiro):
+        """."""
+        melhor = -9999
+        melhor_mov = {
+            'x': None,
+            'y': None,
+        }
+        for x in self.movimentos(deepcopy(tabuleiro)):
+            valor = self.minimax(
+                self.jogar_simulacao(
+                    2, x[0], x[1],
+                    deepcopy(tabuleiro)),
+                1, False,
+                -999, +999)
+            print(x[0], x[1], valor, melhor)
+            if valor > melhor:
+                melhor_mov['x'] = x[0]
+                melhor_mov['y'] = x[1]
+                melhor = valor
+        # print(melhor)
+        print(melhor_mov)
+        return melhor_mov
+
+    def minimax(self, tabuleiro, depth, ismax, alfa, beta):
+        """A = -int."""
+        if self.vencedor(tabuleiro):
+            return 0
+
+        if ismax:
+            melhor = -9999
+            for move in self.movimentos(tabuleiro):
+                valor = self.minimax(
+                    self.jogar_simulacao(2, move[0], move[1], tabuleiro),
+                    depth + 1,
+                    False,
+                    alfa,
+                    beta)
+                # print(valor)
+                melhor = max(melhor, valor)
+                alfa = max(alfa, melhor)
+                if (alfa >= beta):
+                    break
+            # print(melhor)
+            return melhor - depth
+
+        else:
+            melhor = 9999
+            for move in self.movimentos(tabuleiro):
+                valor = self.minimax(
+                    self.jogar_simulacao(1, move[0], move[1], tabuleiro),
+                    depth + 1,
+                    True,
+                    alfa,
+                    beta)
+                melhor = min(melhor, valor)
+                alfa = min(alfa, melhor)
+                if (alfa >= beta):
+                    break
+            # print(melhor)
+            return melhor + depth
+
+    def movimentos(self, tabuleiro):
+        """."""
+        movs = []
+        for x in range(3):
+            for y in range(3):
+                if tabuleiro[x][y] == 0:
+                    movs.append((x, y))
+        return movs
 
 
 def clear():
@@ -104,17 +179,27 @@ def clear():
 
 clear()
 t = Tabuleiro(1, 2)
+c = Computador(2)
 jogador = random.randint(1, 2)
 print("Jogador %s começa" % str(jogador))
 while not t.vencedor():
+    if 0 not in t.get_tabuleiro()[0] and\
+            0 not in t.get_tabuleiro()[1] and\
+            0 not in t.get_tabuleiro()[2]:
+        print("Empate")
+        break
     print("Vez do jogador %d" % jogador)
     t.mostrar_tabuleiro()
-    temp = input("Jogar em qual posição(xy)? ")
-    while not t.jogar(jogador, int(temp[0]) - 1, int(temp[1]) - 1):
-        clear()
-        t.mostrar_tabuleiro()
+    if jogador == 2:
+        jogada = c.processar(deepcopy(t.get_tabuleiro()))
+        t.jogar(jogador, jogada['x'], jogada['y'])
+    else:
         temp = input("Jogar em qual posição(xy)? ")
-    clear()
+        while not t.jogar(jogador, int(temp[0]) - 1, int(temp[1]) - 1):
+            clear()
+            t.mostrar_tabuleiro()
+            temp = input("Jogar em qual posição(xy)? ")
+        clear()
     jogador = (jogador % 2) + 1
 print("Jogador %d ganhou" % t.vencedor())
 t.mostrar_tabuleiro()
