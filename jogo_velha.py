@@ -142,7 +142,7 @@ class Computador(Tabuleiro):
                 if (alfa >= beta):
                     break
             # print(melhor)
-            return melhor - depth
+            return melhor + depth
 
         else:
             melhor = 9999
@@ -158,7 +158,7 @@ class Computador(Tabuleiro):
                 if (alfa >= beta):
                     break
             # print(melhor)
-            return melhor + depth
+            return melhor - depth
 
     def movimentos(self, tabuleiro):
         """."""
