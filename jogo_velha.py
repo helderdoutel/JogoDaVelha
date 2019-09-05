@@ -101,7 +101,7 @@ class Computador(Tabuleiro):
 
     def processar(self, tabuleiro):
         """."""
-        melhor = -9999
+        melhor = -999
         melhor_mov = {
             'x': None,
             'y': None,
@@ -125,10 +125,13 @@ class Computador(Tabuleiro):
     def minimax(self, tabuleiro, depth, ismax, alfa, beta):
         """A = -int."""
         if self.vencedor(tabuleiro):
-            return 0
+            if not ismax:
+                return 100
+            else:
+                return -100
 
         if ismax:
-            melhor = -9999
+            melhor = -999
             for move in self.movimentos(tabuleiro):
                 valor = self.minimax(
                     self.jogar_simulacao(2, move[0], move[1], tabuleiro),
@@ -138,14 +141,14 @@ class Computador(Tabuleiro):
                     beta)
                 # print(valor)
                 melhor = max(melhor, valor)
-                alfa = max(alfa, melhor)
+                alfa = min(alfa, melhor)
                 if (alfa >= beta):
                     break
             # print(melhor)
             return melhor - depth
 
         else:
-            melhor = 9999
+            melhor = 999
             for move in self.movimentos(tabuleiro):
                 valor = self.minimax(
                     self.jogar_simulacao(1, move[0], move[1], tabuleiro),
