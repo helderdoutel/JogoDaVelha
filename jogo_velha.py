@@ -38,24 +38,28 @@ class Tabuleiro:
         for x in range(3):
             temp = []
             for y in range(3):
+                # print(tabuleiro[x][y])
                 if tabuleiro[x][y] not in temp:
                     temp.append(tabuleiro[x][y])
-            if len(temp) == 1:
+            # print(temp)
+            if len(temp) == 1 and 0 not in temp:
                 return temp[0]
         # linha
         for x in range(3):
             temp = []
             for y in range(3):
+                # print(tabuleiro[y][x])
                 if tabuleiro[y][x] not in temp:
                     temp.append(tabuleiro[y][x])
-            if len(temp) == 1:
+            # print(temp)
+            if len(temp) == 1 and 0 not in temp:
                 return temp[0]
         # diagonal 1
         temp = []
         for x in range(3):
             if tabuleiro[x][x] not in temp:
                 temp.append(tabuleiro[x][x])
-        if len(temp) == 1:
+        if len(temp) == 1 and 0 not in temp:
             return temp[0]
 
         # diagonal 2
@@ -63,7 +67,7 @@ class Tabuleiro:
         for x in range(3):
             if tabuleiro[x][(x - 2) * (-1)] not in temp:
                 temp.append(tabuleiro[x][(x - 2) * (-1)])
-        if len(temp) == 1:
+        if len(temp) == 1 and 0 not in temp:
             vencedor = temp[0]
         return vencedor
 
@@ -184,6 +188,7 @@ clear()
 t = Tabuleiro(1, 2)
 c = Computador(2)
 jogador = random.randint(1, 2)
+# print(t.vencedor(tabuleiro=[[0,0,0],[0,0,0],[1,1,1]]))
 print("Jogador %s começa" % str(jogador))
 while not t.vencedor():
     if 0 not in t.get_tabuleiro()[0] and\
