@@ -41,7 +41,7 @@ class Tabuleiro:
                 if tabuleiro[x][y] not in temp:
                     temp.append(tabuleiro[x][y])
             if len(temp) == 1:
-                vencedor = temp[0]
+                return temp[0]
         # linha
         for x in range(3):
             temp = []
@@ -49,14 +49,14 @@ class Tabuleiro:
                 if tabuleiro[y][x] not in temp:
                     temp.append(tabuleiro[y][x])
             if len(temp) == 1:
-                vencedor = temp[0]
+                return temp[0]
         # diagonal 1
         temp = []
         for x in range(3):
             if tabuleiro[x][x] not in temp:
                 temp.append(tabuleiro[x][x])
         if len(temp) == 1:
-            vencedor = temp[0]
+            return temp[0]
 
         # diagonal 2
         temp = []
@@ -113,7 +113,7 @@ class Computador(Tabuleiro):
                     deepcopy(tabuleiro)),
                 1, False,
                 -999, +999)
-            print(x[0], x[1], valor, melhor)
+            # print(x[0], x[1], valor, melhor)
             if valor > melhor:
                 melhor_mov['x'] = x[0]
                 melhor_mov['y'] = x[1]
@@ -142,7 +142,7 @@ class Computador(Tabuleiro):
                 if (alfa >= beta):
                     break
             # print(melhor)
-            return melhor + depth
+            return melhor - depth
 
         else:
             melhor = 9999
@@ -158,7 +158,7 @@ class Computador(Tabuleiro):
                 if (alfa >= beta):
                     break
             # print(melhor)
-            return melhor - depth
+            return melhor + depth
 
     def movimentos(self, tabuleiro):
         """."""
